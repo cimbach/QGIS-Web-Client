@@ -1,5 +1,8 @@
 //default language code, can be overwritten with lang parameter in URL
-var lang = "en"; //for available codes see array availableLanguages in file GlobalOptions.js
+var lang = "fr"; //for available codes see array availableLanguages in file GlobalOptions.js
+var base_wmts_url = "https://map.lausanne.ch/tiles";
+var MAX_EXTENT          = [420000, 30000, 900000, 350000];
+var MAX_EXTENT_LIDAR    = [532500, 149000, 545625, 161000]; //projet lidar
 
 //Help file (must be a local file)
 var helpfile = "help_en.html";
@@ -10,7 +13,8 @@ var customGetUrlParamsParser = null;
 //Servername (optional) and path and name name of QGIS Server FCGI-file
 //either with or without server-name - without servername recommended for easier porting to other servers
 //do not add a ? or & after the .fcgi extension
-var serverAndCGI = "/cgi-bin/qgis_mapserv.fcgi";
+//var serverAndCGI = "/cgi-bin/qgis_mapserv.fcgi";
+var serverAndCGI = "/wmsqgis";
 
 //Optional url for print server hosted on a different server. Default: same as above.
 // var serverAndCGI = "http://otherserver/cgi-bin/qgis_mapserv.fcgi";
@@ -32,20 +36,22 @@ var showMetaDataInLegend = true;
 
 // show maptips when mouse is over object, set to false if you just want to click and show results
 // if set to true every mouse position over feature of queriable layers is GetFeatureInfo request on server
-var enableHoverPopup = true;
+var enableHoverPopup = false;
 
-var defaultIdentificationMode = "topMostHit";
+//var defaultIdentificationMode = "topMostHit";
+var defaultIdentificationMode = "allLayers";
 
 // use geodesic measures, i.e. not planar measures
 // this is useful if a projection with high distortion of length/area is used, eg.g. GoogleMercator
-var useGeodesicMeasurement = true;
+//var useGeodesicMeasurement = true;
+var useGeodesicMeasurement = false;
 
 //search box for queries while typing
 //enable to use GeoNames search
 var useGeoNamesSearchBox = false;
 var geoNamesUserName = 'insert your geonames user name';
 //URL for custom search scripts
-var searchBoxQueryURL = null; // "/wsgi/search.wsgi?query=";
+var searchBoxQueryURL = "/wsgi/search.wsgi?query=";
 var searchBoxGetGeomURL = null; // "/wsgi/getSearchGeom.wsgi";
 
 // use QGIS WMS highlight for selected search result in search box
@@ -82,12 +88,14 @@ if (enableBingCommercialMaps) {
     var bingApiKey = "add Bing api key here"; // http://msdn.microsoft.com/en-us/library/ff428642.aspx
 }
 
-var enableGoogleCommercialMaps = true;
+var enableGoogleCommercialMaps = false;
 
-var enableOSMMaps = true;
+var enableOSMMaps = false;
 
+var enableLausannePV = true;
 var enableBGMaps = false;
-if (enableBingCommercialMaps || enableOSMMaps || enableGoogleCommercialMaps) {
+
+if (enableBingCommercialMaps || enableOSMMaps || enableGoogleCommercialMaps || enableLausannePV) {
 	enableBGMaps = true;
 }
 if (enableBGMaps) {
@@ -231,7 +239,7 @@ var mapSearchPanelOutputRegion = 'popup' ; // Possible values: default,right,bot
 //note that you have to also link a GISProjectListing.js file containing a valid
 //project listing structure - the root object is called 'gis_projects'
 //have a look at the template file and documentation for the correct json structure
-var mapThemeSwitcherActive = true;
+var mapThemeSwitcherActive = false;
 //you can provide an alternative template for the theme-switcher - see also file ThemeSwitcher.js (ThemeSwitcher.prototype.initialize)
 var themeSwitcherTemplate = null;
 
@@ -270,22 +278,24 @@ var layerImageFormats = [
 */
 
 //EPSG projection code of your QGIS project
-var authid = "EPSG:"+3857;
+//var authid = "EPSG:"+3857;
+var authid = "EPSG:"+21781;
 
 //background transparency for the QGIS Server generated layer (commercial background layers not effected)
 //set to true if you want the background to be transparent, layer image will be bigger (32 vs 24bit)
 var qgisLayerTransparency = true;
 
 //number of zoomlevels, uses main map layer and all base layers
-var ZOOM_LEVELS = 22;
+//var ZOOM_LEVELS = 20;
+var ZOOM_LEVELS = 12;
 
 // OpenLayers global options
 // see http://dev.openlayers.org/releases/OpenLayers-2.10/doc/apidocs/files/OpenLayers/Map-js.html
 var MapOptions = {
   projection: new OpenLayers.Projection(authid),
   units: "m",
-//  maxScale:50,
-//  minScale:40000000,
+  maxScale:50,
+  minScale:50000,
   numZoomLevels:ZOOM_LEVELS,
   fractionalZoom: !enableWmtsBaseLayers && !enableBGMaps,
   transitionEffect:"resize",
@@ -315,7 +325,7 @@ var OverviewMapOptions = {
   projection: new OpenLayers.Projection(authid),
   units: "m",
   maxScale:50,
-  minScale:300000000,
+  minScale:100000,
   transitionEffect:"resize"
 };
 var OverviewMapSize = new OpenLayers.Size(200,200);
@@ -326,8 +336,8 @@ if (enableOSMMaps) {
 }
 else {
   overviewLayer = new OpenLayers.Layer.WMS("Overview-Map",
-  serverAndCGI+"?map=/home/web/qgis-web-client/projects/naturalearth_110million.qgs",
-  {layers:"Land",format:"image/png"},
+  serverAndCGI+"/00_projet_de_base?",
+  {layers:"Fond cadastral",format:"image/png"},
   {buffer:0,singleTile:true,transitionEffect:"resize"});
 }
 
@@ -360,7 +370,8 @@ var printCapabilities={
     {"name":"1:35'000","value":"35000"},
     {"name":"1:40'000","value":"40000"},
     {"name":"1:45'000","value":"45000"},
-    {"name":"1:50'000","value":"50000"},
+    {"name":"1:50'000","value":"50000"}
+/*,
     {"name":"1:75'000","value":"75000"},
     {"name":"1:100'000","value":"100000"},
     {"name":"1:250'000","value":"250000"},
@@ -382,6 +393,7 @@ var printCapabilities={
     {"name":"1:100'000'000","value":"100000000"},
     {"name":"1:125'000'000","value":"125000000"},
     {"name":"1:150'000'000","value":"150000000"}
+*/
   ],
   "dpis":[
     {"name":"150 dpi","value":"150"},
@@ -449,7 +461,8 @@ var exportCapabilities={
   "layouts":[],
   "formats":[
     {"name":"JPEG","value":"jpg"},
-    {"name":"PNG","value":"png"}
+    {"name":"PNG","value":"png"},
+    {"name":"TIFF","value":"tif"}
   ]
 };
 
