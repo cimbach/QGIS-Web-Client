@@ -23,6 +23,12 @@
 
 var featureInfoPopupContents;
 var closePopupClick = false; // stores if the click results from closing a clickPopup
+var popup_width = 400;
+var popup_height = 500;
+var popup_vertical_offset =152;
+var markers_layer_info;
+var marker_info;
+var marker_info_xy;
 
 function showFeatureInfo(evt) {
     if (identifyToolActive) {
@@ -56,10 +62,20 @@ function showFeatureInfo(evt) {
                         featureInfoHighlightLayer.addFeatures(highLightGeometry[i]);
                     }
                 }
+
+                var icon_size = new OpenLayers.Size(20,20);
+                var icon_offset = new OpenLayers.Pixel(-(icon_size.w/2), -(icon_size.h/2));
+                var icon = new OpenLayers.Icon('/gis_icons/clic_position.png', icon_size, icon_offset);
+                markers_layer_info = new OpenLayers.Layer.Markers( "markers_info" );
+                map.addLayer(markers_layer_info);
+                if (marker_info != null) marker_info.erase();
+                marker_info = new OpenLayers.Marker(map.getLonLatFromPixel(evt.xy),icon);
+                markers_layer_info.addMarker(marker_info);
                 clickPopup = new OpenLayers.Popup.FramedCloud(
+                    
                     null, // id
                     map.getLonLatFromPixel(evt.xy), // lonlat
-                    null, //new OpenLayers.Size(1,1), // contentSize
+                    new OpenLayers.Size(popup_width,popup_height), //new OpenLayers.Size(1,1), // contentSize
                     text, //contentHTML
                     null, // anchor
                     true,  // closeBox
@@ -67,9 +83,22 @@ function showFeatureInfo(evt) {
                     );
                 // For the displacement problem
                 clickPopup.panMapIfOutOfView = Ext.isGecko;
-                clickPopup.autoSize = true;
+                clickPopup.autoSize = false;
                 clickPopup.events.fallThrough = false;
-                map.addPopup(clickPopup); //*/
+                clickPopup.fixedRelativePosition = true;
+                
+                // CIMBACH to get a relativePosition in order to test it
+                map.addPopup(clickPopup);
+                map.removePopup(clickPopup);
+                
+                // CIMBACH offset correction for top positions of the popup
+                if (clickPopup.relativePosition.charAt(0)=="t") {
+                    var popup_offset = {'size':new OpenLayers.Size(0,0),'offset':new OpenLayers.Pixel(0,popup_vertical_offset)};
+                    clickPopup.anchor = popup_offset;
+                }
+                
+                map.addPopup(clickPopup);
+                
                 changeCursorInMap("default");
             }
         } else {
@@ -235,10 +264,12 @@ function onHoverPopupClick(evt){
 
 function onClickPopupClosed(evt) {
     removeClickPopup();
+
     // enable the hover popup for the curent mosue position
     if (enableHoverPopup)
 		WMSGetFInfoHover.activate();
     var map = geoExtMap.map; // gets OL map object
+
     evt.xy = map.events.getMousePosition(evt); // non api function of OpenLayers.Events
     map.events.triggerEvent("mousemove", evt);
     closePopupClick = true; // indicate to not open a new clickPopup
@@ -250,6 +281,12 @@ function removeClickPopup() {
     clickPopup.destroy();
     clickPopup = null;
     featureInfoHighlightLayer.removeAllFeatures();
+    
+    //CG AJOUT POPUP
+    markers_layer_info.removeMarker(marker_info);
+    marker_info.erase();
+    map.removeLayer(markers_layer_info);
+    markers_layer_info.destroy();
 }
 
 function removeHoverPopup(){
