@@ -15,6 +15,11 @@ var selectedLayers; //later an array containing all visible (selected) layers
 var selectedQueryableLayers; //later an array of all visible (selected and queryable) layers
 var allLayers; //later an array containing all leaf layers
 var thematicLayer, highlightLayer, featureInfoHighlightLayer;
+//cgil added base WMTS for Lausanne
+var basewmts_pv;
+var basewmts_cada;
+var basewmts_ortho;
+var basewmts_cn;
 var arrayOSM; //OSM
 var arrayAerial; //OSM
 var arrayCycle; //OSM
@@ -120,6 +125,103 @@ Ext.onReady(function () {
 
 	//set some status messsages
 	mainStatusText.setText(mapAppLoadingString[lang]);
+	
+	// cgil added WMTS ville de Lausanne background layers
+	if (enableLausannePV) {
+	   basewmts_pv = new OpenLayers.Layer.WMTS({
+        	name: "fond plan ville",
+	        url: base_wmts_url,
+        	layer: 'fonds_geo_osm_bdcad_couleur',
+	        formatSuffix: 'png',
+	        requestEncoding: 'REST',
+	        buffer: 2,
+	        transitionEffect: "resize", // or map-resize if overlay
+        	visibility: true,
+	        style: 'default',
+	        dimensions: ['TIME'],
+        	params: {
+	            'time': '2015'
+        	},
+	        matrixSet: 'swissgrid_05',
+        	maxExtent: MAX_EXTENT,
+	        projection: new OpenLayers.Projection("EPSG:21781"),
+        	units: "m",
+	        serverResolutions: [50, 20, 10, 5, 2.5, 1, 0.5, 0.25, 0.1, 0.05]
+	    });
+
+
+           basewmts_cada = new OpenLayers.Layer.WMTS({
+        	name: "fond cadastral",
+	        url: base_wmts_url,
+        	layer: 'fonds_geo_osm_bdcad_gris',
+	        formatSuffix: 'png',
+        	requestEncoding: 'REST',
+	        buffer: 2,
+        	transitionEffect: "resize", // or map-resize if overlay
+	        visibility: true,
+        	style: 'default',
+	        dimensions: ['TIME'],
+        	params: {
+	            'time': '2015'
+        	},
+	        matrixSet: 'swissgrid_05',
+        	maxExtent: MAX_EXTENT,
+	        projection: new OpenLayers.Projection("EPSG:21781"),
+        	units: "m",
+	        serverResolutions: [50, 20, 10, 5, 2.5, 1, 0.5, 0.25, 0.1, 0.05]
+	    });
+
+
+	   basewmts_ortho = new OpenLayers.Layer.WMTS({
+       		name: "orthophoto vol lidar 2012 ",
+	        url: base_wmts_url,
+        	layer: 'orthophotos_ortho_lidar_2012',
+	        formatSuffix: 'png',
+	        requestEncoding: 'REST',
+	        buffer: 2,
+	        transitionEffect: "resize", // or map-resize if overlay
+	        visibility: true,
+	        style: 'default',
+	        dimensions: ['TIME'],
+	        params: {
+	            'time': '2012'
+        	},
+	        matrixSet: 'swissgrid_05',
+	        maxExtent: MAX_EXTENT,
+        	projection: new OpenLayers.Projection("EPSG:21781"),
+	        units: "m",
+        	serverResolutions: [50, 20, 10, 5, 2.5, 1, 0.5, 0.25, 0.1, 0.05]
+	    });
+
+	   
+	   basewmts_cn = new OpenLayers.Layer.WMTS({
+       	 	name: "carte nationale",
+	        url: base_wmts_url,
+        	layer: 'fonds_geo_carte_nationale_msgroup',
+	        formatSuffix: 'png',
+	        requestEncoding: 'REST',
+	        buffer: 2,
+	        transitionEffect: "resize", // or map-resize if overlay
+	        visibility: true,
+	        style: 'default',
+	        dimensions: ['TIME'],
+	        params: {
+        	    'time': '2014'
+	        },
+        	matrixSet: 'swissgrid_05',
+	        maxExtent: MAX_EXTENT,
+        	projection: new OpenLayers.Projection("EPSG:21781"),
+	        units: "m",
+        	serverResolutions: [50, 20, 10, 5, 2.5, 1, 0.5, 0.25, 0.1, 0.05]
+	    });
+
+	   baseLayers.push(basewmts_cada);
+	   baseLayers.push(basewmts_pv);
+	   baseLayers.push(basewmts_ortho);
+	   baseLayers.push(basewmts_cn);
+
+
+	}	
 
 	//OpenstreetMap background layers
 	if (enableOSMMaps) {	    
