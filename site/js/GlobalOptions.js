@@ -396,10 +396,11 @@ var printCapabilities={
 */
   ],
   "dpis":[
-    {"name":"150 dpi","value":"150"},
+    {"name":"96 dpi","value":"96"},
+    {"name":"150 dpi","value":"150"} /*,
     {"name":"300 dpi","value":"300"},
     {"name":"600 dpi","value":"600"},
-    {"name":"1200 dpi","value":"1200"}
+    {"name":"1200 dpi","value":"1200"}*/
   ],
   "layouts":[]
 };

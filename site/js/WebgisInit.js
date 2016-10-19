@@ -1854,9 +1854,9 @@ function postLoading() {
 		printLayoutsCombobox = Ext.getCmp('PrintLayoutsCombobox');
 		printLayoutsCombobox.setValue(printLayoutsCombobox.store.getAt(0).data.name);
 		var printDPICombobox = Ext.getCmp('PrintDPICombobox');
-		printDPICombobox.setValue("300");
+		printDPICombobox.setValue("96");
 		//need to manually fire the event, because .setValue doesn't; index omitted, not needed
-		printDPICombobox.fireEvent("select", printDPICombobox, printDPICombobox.findRecord(printDPICombobox.valueField, "300"));
+		printDPICombobox.fireEvent("select", printDPICombobox, printDPICombobox.findRecord(printDPICombobox.valueField, "96"));
         //if the var fixedPrintResolution in GlobalOptions.js is set, the printLayoutsCombobox will be hidden
         if (fixedPrintResolution != null && parseInt(fixedPrintResolution) > 0){
             printDPICombobox.hide(); // hide dpi combobox
