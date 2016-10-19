@@ -92,17 +92,17 @@ var enableGoogleCommercialMaps = false;
 
 var enableOSMMaps = false;
 
-var enableLausannePV = true;
+var enableLausannePV = false;
 var enableBGMaps = false;
 
 if (enableBingCommercialMaps || enableOSMMaps || enableGoogleCommercialMaps || enableLausannePV) {
-	enableBGMaps = true;
+   enableBGMaps = true;
 }
 if (enableBGMaps) {
-	// enter the index of the backgroundLayer to be visible after loading,
-	// set to a value < 0 to not show any backgroundLayer
-	// this setting is overridden if a value for url-parameter visibleBackgroundLayer is passed
-	var initialBGMap = 0;
+   // enter the index of the backgroundLayer to be visible after loading,
+   // set to a value < 0 to not show any backgroundLayer
+   // this setting is overridden if a value for url-parameter visibleBackgroundLayer is passed
+   var initialBGMap = 0;
 }
 
 // enable to use WMTS base layers
@@ -215,9 +215,9 @@ mapSearchPanelConfigs[project_map] = [simpleWmsSearch, urlRewriteSearch];
 //templates to define tooltips for a layer, to be shown on hover identify. The layer fields must be wrapped inside <%%> special tags.
 //if a layers field is found with the name "tooltip" its content will have precedence over this configuration 
 var tooltipTemplates = {
-	'Country':{
-		template: "Look for the country on Google Search: <a href='http://www.google.it/#output=search&q=<%name%>' target='_blank'><%name%></a>"
-	}
+   'Country':{
+      template: "Look for the country on Google Search: <a href='http://www.google.it/#output=search&q=<%name%>' target='_blank'><%name%></a>"
+   }
 };
 
 
