@@ -4,9 +4,10 @@
 from __future__ import print_function
 import psycopg2  # PostgreSQL DB Connection
 
-# configure your DB connection here geomapfish-dev
-DB_CONN_STRING = "host='5.196.168.201' dbname='lausanne_cimbach' port='5432' user='geosearch' password='geosearch'"
+# configure your DB connection parameters in ./config/config_pggeomapfish.py
+from config import config_pggeomapfish as config
 
+DB_CONN_STRING = "host='" + config.my_host + "' dbname='" + config.my_dbname + "' port='"  + config.my_port + "' user='" + config.my_user + "' password='" + config.my_password + "'"
 
 def getConnection(environ, start_response):
     # SQL database connection

@@ -1,3 +1,4 @@
+wsgi/config/config_pggeomapfish.py
 apache-conf/qgis-web-client.conf
 generate_docs.sh~
 q.log

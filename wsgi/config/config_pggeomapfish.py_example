@@ -1,0 +1,5 @@
+my_host = 'your_db_host' 
+my_port = 'your_postgresql_port'
+my_dbname = 'your_db'
+my_user = 'your_db_user'
+my_password = 'your_db_password'
