@@ -369,14 +369,26 @@ Ext.extend(QGIS.PrintProvider, GeoExt.data.PrintProvider, {
     //need to determine grid spacing
     var mapScale = printExtent.page.scale.get("value");
     var grid_interval = 10;
-    if (mapScale > 100 && mapScale <= 250) {
+    if (mapScale > 100 && mapScale <= 200) {
+      grid_interval = 20;
+    }
+    else if (mapScale > 200 && mapScale <= 250) {
       grid_interval = 25;
     }
-    else if (mapScale > 250 && mapScale <= 1000) {
+    else if (mapScale > 250 && mapScale <= 500) {
       grid_interval = 50;
     }
-    else if (mapScale > 1000 && mapScale <= 2500) {
+    else if (mapScale > 500 && mapScale <= 750) {
+      grid_interval = 75;
+    }
+    else if (mapScale > 750 && mapScale <= 1000) {
       grid_interval = 100;
+    }
+    else if (mapScale > 1000 && mapScale <= 1500) {
+      grid_interval = 150;
+    }
+    else if (mapScale > 1500 && mapScale <= 2500) {
+      grid_interval = 200;
     }
     else if (mapScale > 2500 && mapScale <= 5000) {
       grid_interval = 250;
@@ -550,14 +562,14 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
 
   initComponent: function() {
     // i18n
-	if(this.url.indexOf("api.geo.admin.ch") != -1){
+   if(this.url.indexOf("api.geo.admin.ch") != -1){
 
-		this.useSwissNames = true;
-		this.highlightLayer = null;
-		this.highlightLayerName = null;
-		this.searchtables = null;
+      this.useSwissNames = true;
+      this.highlightLayer = null;
+      this.highlightLayerName = null;
+      this.searchtables = null;
 
-	}
+   }
 
     this.emptyText = OpenLayers.i18n(searchFieldDefaultTextString[lang]);
     this.triggerConfig = { // we use a default clear trigger here
@@ -572,10 +584,10 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
       fields.push(this.wmsHighlightLabelAttribute);
     }
 
-		if (this.useSwissNames) {
-			this.emptyText = 'Swisstopo SwissNames';
-			fields = ['name', 'service', 'label', 'bbox'];
-		}
+      if (this.useSwissNames) {
+         this.emptyText = 'Swisstopo SwissNames';
+         fields = ['name', 'service', 'label', 'bbox'];
+      }
 
 
     this.store = new Ext.data.JsonStore({
@@ -595,29 +607,29 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
 
       fields: fields
     });
-		if (this.useSwissNames) {
-			this.tpl = new Ext.XTemplate(
-				'<tpl for="."><div class="x-combo-list-item {name}">',
-				'<tpl if="service == null">',
-				'<b>',
-				'</tpl>',
-				'{label}',
-				'<tpl if="service == null">',
-				'</b>',
-				'</tpl>',
-				'</div></tpl>').compile();
-		}else{
-			this.tpl = new Ext.XTemplate(
-				'<tpl for="."><div class="x-combo-list-item {service}">',
-				'<tpl if="searchtable == null">',
-				'<b>',
-				'</tpl>',
-				'{displaytext}',
-				'<tpl if="searchtable == null">',
-				'</b>',
-				'</tpl>',
-				'</div></tpl>').compile();
-		}
+      if (this.useSwissNames) {
+         this.tpl = new Ext.XTemplate(
+            '<tpl for="."><div class="x-combo-list-item {name}">',
+            '<tpl if="service == null">',
+            '<b>',
+            '</tpl>',
+            '{label}',
+            '<tpl if="service == null">',
+            '</b>',
+            '</tpl>',
+            '</div></tpl>').compile();
+      }else{
+         this.tpl = new Ext.XTemplate(
+            '<tpl for="."><div class="x-combo-list-item {service}">',
+            '<tpl if="searchtable == null">',
+            '<b>',
+            '</tpl>',
+            '{displaytext}',
+            '<tpl if="searchtable == null">',
+            '</b>',
+            '</tpl>',
+            '</div></tpl>').compile();
+      }
 
 
     QGIS.SearchComboBox.superclass.initComponent.call(this);
@@ -670,17 +682,17 @@ QGIS.SearchComboBox = Ext.extend(Ext.form.ComboBox, {
 
   onSelect: function(record, index){
     if(this.fireEvent('beforeselect', this, record, index) !== false){
-		if (this.useSwissNames) {
-		  if (record.get('name') != null) {
-			this.setValue(record.get('label').replace(/<(?:.|\n)*?>/gm, ''));
-			this.fireEvent('select', this, record, index);
-		  }
-		}else{
-		  if (record.get('searchtable') != null) {
-			this.setValue(record.get('displaytext'));
-			this.fireEvent('select', this, record, index);
-		  }
-		}
+      if (this.useSwissNames) {
+        if (record.get('name') != null) {
+         this.setValue(record.get('label').replace(/<(?:.|\n)*?>/gm, ''));
+         this.fireEvent('select', this, record, index);
+        }
+      }else{
+        if (record.get('searchtable') != null) {
+         this.setValue(record.get('displaytext'));
+         this.fireEvent('select', this, record, index);
+        }
+      }
     }
   },
 
