@@ -39,11 +39,12 @@
                 print "<li class='map-item'><a href='maps/$filename'>$filename</a></li>\n";
             }
             ?>
-		<li class='map-item'><a href='maps/assainissement'>assainissement</a></li>
-		<li class='map-item'><a href='maps/souterrain'>souterrain</a></li>
-		<li class='map-item'><a href='maps/asst_poi'>asst_poi</a></li>
-		<li class='map-item'><a href='maps/qwat_lausanne_eau'>qwat_lausanne_eau</a> (&lt;-- NOUVEAU PROJET aout 2016)</li>
-                <li class='map-item'><a href='maps/guichetcartopublic'>guichet carto public</a></li>
+                  <li class='map-item'><a href='maps/assainissement'>assainissement</a></li>
+                  <li class='map-item'><a href='maps/souterrain'>souterrain</a></li>
+                  <li class='map-item'><a href='maps/asst_poi'>asst_poi</a></li>
+                  <li class='map-item'><a href='maps/qwat_lausanne_eau'>qwat_lausanne_eau</a> (&lt;-- NOUVEAU PROJET aout 2016)</li>
+                  <li class='map-item'><a href='maps/guichetcartopublic'>guichet carto public</a></li>
+                  <li class='map-item'><a href='maps/observatoire_environnement'>observatoire environnement</a></li>
 
           </ul>
         </div>
