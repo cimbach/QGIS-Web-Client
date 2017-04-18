@@ -173,9 +173,9 @@ Ext.onReady(function () {
 
 
 	   basewmts_ortho = new OpenLayers.Layer.WMTS({
-       		name: "orthophoto vol lidar 2012 ",
+       		name: "orthophoto vol 2016 ",
 	        url: base_wmts_url,
-        	layer: 'orthophotos_ortho_lidar_2012',
+        	layer: 'orthophotos_ortho_lidar_2016',
 	        formatSuffix: 'png',
 	        requestEncoding: 'REST',
 	        buffer: 2,
@@ -184,7 +184,7 @@ Ext.onReady(function () {
 	        style: 'default',
 	        dimensions: ['TIME'],
 	        params: {
-	            'time': '2012'
+	            'time': '2016'
         	},
 	        matrixSet: 'swissgrid_05',
 	        maxExtent: MAX_EXTENT,
