@@ -1,6 +1,7 @@
 //default language code, can be overwritten with lang parameter in URL
 var lang = "fr"; //for available codes see array availableLanguages in file GlobalOptions.js
-var base_wmts_url = "https://map.lausanne.ch/tiles";
+//var base_wmts_url = "https://map.lausanne.ch/tiles";
+var base_wmts_url = "https://tiles01.lausanne.ch/tiles";
 var MAX_EXTENT          = [420000, 30000, 900000, 350000];
 var MAX_EXTENT_LIDAR    = [532500, 149000, 545625, 161000]; //projet lidar
 
